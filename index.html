@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rota de Entrega</title>
+  <title>Rota de Entrega em Tempo Real</title>
   <style>
     #map {
       height: 500px;
@@ -15,62 +15,62 @@
   <script>
     // Função de inicialização do mapa
     function initMap() {
-      
+      // Cria um mapa inicialmente vazio
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 14
+      });
 
       // Cria um objeto de serviço de direções
       var directionsService = new google.maps.DirectionsService();
-      
+
       // Cria um objeto de exibição de direções no mapa
       var directionsDisplay = new google.maps.DirectionsRenderer();
       directionsDisplay.setMap(map);
 
-      // Obter a localização atual do usuário
+      // Função de retorno de chamada para atualizar a posição no mapa
+      function updatePosition(position) {
+        var currentLocation = new google.maps.LatLng(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+
+        // Define a nova posição no mapa
+        map.setCenter(currentLocation);
+
+        // Define os pontos de origem e destino (você pode alterar para o seu destino específico)
+        var origin = currentLocation;
+        var destination = new google.maps.LatLng(-21.7946, -48.1766);
+
+        // Define as opções de requisição de direções
+        var request = {
+          origin: origin,
+          destination: destination,
+          travelMode: google.maps.TravelMode.DRIVING // Modo de transporte (DRIVING, BICYCLING, TRANSIT, WALKING)
+        };
+
+        // Envia a requisição para a API de Direções
+        directionsService.route(request, function(result, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            // Renderiza a rota no mapa
+            directionsDisplay.setDirections(result);
+          } else {
+            console.error('Falha ao traçar a rota: ' + status);
+          }
+        });
+      }
+
+      // Obter a localização atual do usuário e atualizar a posição no mapa
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var currentLocation = new google.maps.LatLng(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-          alert(currentLocation)
-
-          // Cria um mapa centrado em uma determinada coordenada
-          var map = new google.maps.Map(document.getElementById('map'), {
-            center: currentLocation,
-            zoom: 14
-          });
-          var marker=new google.maps.Marker({position:currentLocation,map:map,title:"Você está Aqui!"});
-
-          // Define os pontos de origem e destino
-          var origin = currentLocation;
-          var destination = '-21.7946, -48.1766';
-          
-
-          // Define as opções de requisição de direções
-          var request = {
-            origin: origin,
-            destination: destination,
-            travelMode: google.maps.TravelMode.DRIVING, // Modo de transporte (DRIVING, BICYCLING, TRANSIT, WALKING)
-          };
-
-          // Envia a requisição para a API de Direções
-          directionsService.route(request, function(result, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-
-              // Renderiza a rota no mapa
-              alert(' traçar a rota: ' + status);
-              directionsDisplay.setDirections(result);
-            } else {
-              alert('Falha ao traçar a rota: ' + status);
-            }
-          });
+        navigator.geolocation.watchPosition(updatePosition, function(error) {
+          console.error('Erro ao obter a localização: ' + error.message);
         });
       } else {
-       alert('Geolocalização não é suportada pelo navegador.');
+        console.error('Geolocalização não é suportada pelo navegador.');
       }
     }
   </script>
 
-  <!-- Inclua a API do Google Maps -->
+   <!-- Inclua a API do Google Maps -->
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6EVGvxZFbZ1wg_5pP9onIn9FQeh1VBFY&callback=initMap">
   </script>
