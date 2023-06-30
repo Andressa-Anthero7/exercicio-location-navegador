@@ -4,8 +4,14 @@
   <title>Rota de Entrega em Tempo Real</title>
   <style>
     #map {
-      min-height:700px;
+      min-height: 700px;
       width: 100%;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #map {
+        min-height: 600px;
+      }
     }
   </style>
 </head>
@@ -67,20 +73,7 @@
       } else {
         alert('Geolocalização não é suportada pelo navegador.');
       }
-
-        setInterval(() => {
-             updatePosition();
-        }, "10000");
-
-
-
-
-
-
-
     }
-
-
   </script>
 
    <!-- Inclua a API do Google Maps -->
