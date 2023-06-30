@@ -4,7 +4,7 @@
   <title>Rota de Entrega em Tempo Real</title>
   <style>
     #map {
-      min-height:800px;
+      min-height:700px;
       width: 100%;
     }
   </style>
@@ -62,7 +62,7 @@
       // Obter a localização atual do usuário e atualizar a posição no mapa
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition(updatePosition, function(error) {
-          console.error('Erro ao obter a localização: ' + error.message);
+          alert('Erro ao obter a localização: ' + error.message);
         });
       } else {
         console.error('Geolocalização não é suportada pelo navegador.');
